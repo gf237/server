@@ -3,6 +3,9 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,4 +79,17 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
     }
   }
+
+  public UserGetDTO loginUser(User userToBeCreated) {
+    User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
+    User userByName = userRepository.findByName(userToBeCreated.getName());
+    if (userByUsername != null && userByName != null) {
+      if (!userByUsername.getId().equals(userByName.getId())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provided username and password do not match.");
+      }
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userByUsername);
+    }
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found or invalid credentials.");
+  }
+
 }
