@@ -33,7 +33,7 @@ public class User implements Serializable {
   @Column(nullable = false, unique = true)
   private String username;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = true, unique = true)
   private String token;
 
   @Column(nullable = false)
@@ -43,7 +43,7 @@ public class User implements Serializable {
   private LocalDate creationDate;
 
   @Column(nullable = true)
-  private Date birthDate;
+  private LocalDate birthDate;
 
   public Long getId() {
     return id;
@@ -93,11 +93,11 @@ public class User implements Serializable {
     this.creationDate = creationDate;
   }
 
-  public Date getBirthDate() {
+  public LocalDate getBirthDate() {
     return birthDate;
   }
 
-  public void setBirthDate(Date birthDate) {
+  public void setBirthDate(LocalDate birthDate) {
     this.birthDate = birthDate;
   }
 

@@ -45,7 +45,7 @@ public class UserService {
 
   public User createUser(User newUser) {
     newUser.setToken(UUID.randomUUID().toString());
-    newUser.setStatus(UserStatus.OFFLINE);
+    newUser.setStatus(UserStatus.ONLINE);
     newUser.setCreationDate(LocalDate.now());
 
     checkIfUserExists(newUser);
@@ -99,4 +99,24 @@ public class UserService {
     return userRepository.findById(userId).orElse(null);
   }
 
+  public void setStatus(User user) {
+    User userToUpdate = userRepository.findById(user.getId()).orElse(null);
+    if (userToUpdate.getStatus() == UserStatus.OFFLINE) {
+      userToUpdate.setStatus(UserStatus.ONLINE);
+    } else {
+      userToUpdate.setStatus(UserStatus.OFFLINE);
+    }
+    userRepository.save(userToUpdate);
+
+  }
+
+  public void updateProfile(User userToUpdate) {
+    User user = userRepository.findById(userToUpdate.getId()).orElse(null);
+    if (user != null) {
+      user.setUsername(userToUpdate.getUsername());
+      user.setBirthDate(userToUpdate.getBirthDate());
+    } else {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found.");
+    }
+  }
 }

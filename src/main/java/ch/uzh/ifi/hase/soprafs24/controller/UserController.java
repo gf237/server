@@ -8,9 +8,10 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * User Controller
@@ -72,4 +73,21 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
 
+  @PostMapping("/status")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void setStatus(@RequestBody UserPostDTO userPostDTO) {
+    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+    userService.setStatus(userInput);
+
+  }
+
+  @PostMapping("/users/{userId}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void editProfile(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
+    User userToUpdate = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+    userService.updateProfile(userToUpdate);
+
+  }
 }
