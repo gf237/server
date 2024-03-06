@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -59,8 +60,8 @@ public class UserController {
   @ResponseBody
   public UserGetDTO loginUser(@RequestBody UserPostDTO userPostDTO) {
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-    UserGetDTO createdUser = userService.loginUser(userInput);
-    return createdUser;
+    User createdUser = userService.loginUser(userInput);
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
   @GetMapping("/users/{userId}")

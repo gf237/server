@@ -85,15 +85,14 @@ public class UserService {
     }
   }
 
-  public UserGetDTO loginUser(User userToBeCreated) {
+  public User loginUser(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
     User userByName = userRepository.findByName(userToBeCreated.getName());
-    userToBeCreated.setStatus(UserStatus.ONLINE);
     if (userByUsername != null && userByName != null) {
       if (!userByUsername.getId().equals(userByName.getId())) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provided username and password do not match.");
       }
-      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userByUsername);
+      return userByUsername;
     }
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found or invalid credentials.");
   }
