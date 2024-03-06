@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * User Controller
@@ -85,9 +83,13 @@ public class UserController {
   @PostMapping("/users/{userId}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public void editProfile(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
-    User userToUpdate = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-    userService.updateProfile(userToUpdate);
-
+  public UserGetDTO editProfile(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
+    User userToUpdate = new User();
+    userToUpdate.setId(userId);
+    userToUpdate.setUsername(userPostDTO.getUsername());
+    userToUpdate.setBirthDate(userPostDTO.getBirthDate());
+    User updatedUser = userService.updateProfile(userToUpdate);
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(updatedUser);
   }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +47,7 @@ public class UserService {
   public User createUser(User newUser) {
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.ONLINE);
+    newUser.setBirthDate(null);
     newUser.setCreationDate(LocalDate.now());
 
     checkIfUserExists(newUser);
@@ -110,11 +112,24 @@ public class UserService {
 
   }
 
-  public void updateProfile(User userToUpdate) {
-    User user = userRepository.findById(userToUpdate.getId()).orElse(null);
+  public User updateProfile(User userToUpdate) {
+    Long userId = userToUpdate.getId();
+    if (userId == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required.");
+    }
+    User user = userRepository.findById(userId).orElse(null);
     if (user != null) {
-      user.setUsername(userToUpdate.getUsername());
-      user.setBirthDate(userToUpdate.getBirthDate());
+      String username = userToUpdate.getUsername();
+      if (username != null) {
+        user.setUsername(username);
+      }
+      Date birthDate = userToUpdate.getBirthDate();
+      if (birthDate != null) {
+        user.setBirthDate(birthDate);
+      }
+      userRepository.save(user);
+      return user;
+
     } else {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found.");
     }

@@ -5,9 +5,18 @@ import java.util.Date;
 
 public class UserPostDTO {
 
+  private Long id;
   private String name;
   private String username;
-  private LocalDate birthDate;
+  private Date birthDate;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public String getName() {
     return name;
@@ -25,11 +34,11 @@ public class UserPostDTO {
     this.username = username;
   }
 
-  public LocalDate getBirthDate() {
+  public Date getBirthDate() {
     return birthDate;
   }
 
-  public void setBirthDate(LocalDate birthDate) {
+  public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
   }
 

@@ -43,7 +43,7 @@ public class User implements Serializable {
   private LocalDate creationDate;
 
   @Column(nullable = true)
-  private LocalDate birthDate;
+  private Date birthDate;
 
   public Long getId() {
     return id;
@@ -93,11 +93,11 @@ public class User implements Serializable {
     this.creationDate = creationDate;
   }
 
-  public LocalDate getBirthDate() {
+  public Date getBirthDate() {
     return birthDate;
   }
 
-  public void setBirthDate(LocalDate birthDate) {
+  public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
   }
 
