@@ -46,7 +46,7 @@ public class UserService {
   public User createUser(User newUser) {
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.ONLINE);
-    newUser.setBirthDate(null);
+    newUser.setBirthday(null);
     newUser.setCreationDate(LocalDate.now());
 
     checkIfUserExists(newUser);
@@ -110,9 +110,9 @@ public class UserService {
     if (username != null) {
       userToUpdate.setUsername(username);
     }
-    LocalDate birthday = inputUser.getBirthDate();
+    LocalDate birthday = inputUser.getBirthday();
     if (birthday != null) {
-      userToUpdate.setBirthDate(birthday);
+      userToUpdate.setBirthday(birthday);
     }
     userRepository.save(userToUpdate);
 

@@ -92,11 +92,11 @@ public class User implements Serializable {
     this.creationDate = creationDate;
   }
 
-  public LocalDate getBirthDate() {
+  public LocalDate getBirthday() {
     return birthday;
   }
 
-  public void setBirthDate(LocalDate birthday) {
+  public void setBirthday(LocalDate birthday) {
     this.birthday = birthday;
   }
 

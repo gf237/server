@@ -62,11 +62,11 @@ public class UserGetDTO {
     this.token = token;
   }
 
-  public LocalDate getBirthDate() {
+  public LocalDate getBirthday() {
     return birthday;
   }
 
-  public void setBirthDate(LocalDate birthday) {
+  public void setBirthday(LocalDate birthday) {
     this.birthday = birthday;
   }
 
