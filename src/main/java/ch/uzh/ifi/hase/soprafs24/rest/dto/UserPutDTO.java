@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class UserPutDTO {
     private Long id;
     private String username;
-    private LocalDate birthDate;
+    private LocalDate birthday;
 
     public String getUsername() {
         return username;
@@ -24,10 +24,10 @@ public class UserPutDTO {
     }
 
     public LocalDate getBirthDate() {
-        return birthDate;
+        return birthday;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }

@@ -12,7 +12,7 @@ public class UserGetDTO {
   private UserStatus status;
   private String token;
   private LocalDate creationDate;
-  private LocalDate birthDate;
+  private LocalDate birthday;
 
   public Long getId() {
     return id;
@@ -63,11 +63,11 @@ public class UserGetDTO {
   }
 
   public LocalDate getBirthDate() {
-    return birthDate;
+    return birthday;
   }
 
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
+  public void setBirthDate(LocalDate birthday) {
+    this.birthday = birthday;
   }
 
 }

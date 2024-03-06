@@ -105,23 +105,16 @@ public class UserService {
     userToUpdate.setStatus(UserStatus.OFFLINE);
   }
 
-  public User updateProfile(User userToUpdate) {
-    String token = userToUpdate.getToken();
-    User user = userRepository.findByToken(token);
-    if (user != null) {
-      String username = userToUpdate.getUsername();
-      if (username != null) {
-        user.setUsername(username);
-      }
-      LocalDate birthDate = userToUpdate.getBirthDate();
-      if (birthDate != null) {
-        user.setBirthDate(birthDate);
-      }
-      userRepository.save(user);
-      return user;
-
-    } else {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found.");
+  public void updateProfile(User userToUpdate, User inputUser) {
+    String username = inputUser.getUsername();
+    if (username != null) {
+      userToUpdate.setUsername(username);
     }
+    LocalDate birthday = inputUser.getBirthDate();
+    if (birthday != null) {
+      userToUpdate.setBirthDate(birthday);
+    }
+    userRepository.save(userToUpdate);
+
   }
 }

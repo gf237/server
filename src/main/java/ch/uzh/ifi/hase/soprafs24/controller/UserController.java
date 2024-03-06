@@ -86,8 +86,9 @@ public class UserController {
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public void editProfile(@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
-    User userInput = DTOMapper.INSTANCE.convertUserPutToEntity(userPutDTO);
-    userService.updateProfile(userInput);
+    User userInput = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
+    User userToUpdate = userService.getUser(userId);
+    userService.updateProfile(userToUpdate, userInput);
 
   }
 
