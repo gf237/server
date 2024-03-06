@@ -88,6 +88,7 @@ public class UserService {
   public UserGetDTO loginUser(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
     User userByName = userRepository.findByName(userToBeCreated.getName());
+    userToBeCreated.setStatus(UserStatus.ONLINE);
     if (userByUsername != null && userByName != null) {
       if (!userByUsername.getId().equals(userByName.getId())) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provided username and password do not match.");
@@ -103,21 +104,12 @@ public class UserService {
 
   public void setStatus(User user) {
     User userToUpdate = userRepository.findById(user.getId()).orElse(null);
-    if (userToUpdate.getStatus() == UserStatus.OFFLINE) {
-      userToUpdate.setStatus(UserStatus.ONLINE);
-    } else {
-      userToUpdate.setStatus(UserStatus.OFFLINE);
-    }
-    userRepository.save(userToUpdate);
-
+    userToUpdate.setStatus(UserStatus.OFFLINE);
   }
 
   public User updateProfile(User userToUpdate) {
-    Long userId = userToUpdate.getId();
-    if (userId == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required.");
-    }
-    User user = userRepository.findById(userId).orElse(null);
+    String token = userToUpdate.getToken();
+    User user = userRepository.findByToken(token);
     if (user != null) {
       String username = userToUpdate.getUsername();
       if (username != null) {
