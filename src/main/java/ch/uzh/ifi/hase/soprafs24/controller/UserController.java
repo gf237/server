@@ -86,10 +86,9 @@ public class UserController {
   public UserGetDTO editProfile(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
     User userToUpdate = new User();
     userToUpdate.setId(userId);
-    userToUpdate.setUsername(userPostDTO.getUsername());
-    userToUpdate.setBirthDate(userPostDTO.getBirthDate());
     User updatedUser = userService.updateProfile(userToUpdate);
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(updatedUser);
+
   }
 
 }
