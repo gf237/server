@@ -72,22 +72,22 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
 
-  @PostMapping("/status")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public void setStatus(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
-    User userToUpdate = new User();
-    userToUpdate.setId(userId);
-    userService.setStatus(userToUpdate);
-  }
+  // @PostMapping("/status")
+  // @ResponseStatus(HttpStatus.OK)
+  // @ResponseBody
+  // public void setStatus(@PathVariable Long userId, @RequestBody UserPostDTO
+  // userPostDTO) {
+  // User userToUpdate = new User();
+  // userToUpdate.setId(userId);
+  // userService.setStatus(userToUpdate);
+  // }
 
-  @PostMapping("/users/{userId}")
+  @PutMapping("/users/{userId}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public UserGetDTO editProfile(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
-    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-    User updatedUser = userService.updateProfile(userInput);
-    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(updatedUser);
+  public void editProfile(@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
+    User userInput = DTOMapper.INSTANCE.convertUserPutToEntity(userPutDTO);
+    userService.updateProfile(userInput);
 
   }
 
