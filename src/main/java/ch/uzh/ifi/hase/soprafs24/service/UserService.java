@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -114,7 +113,7 @@ public class UserService {
       if (username != null) {
         user.setUsername(username);
       }
-      Date birthDate = userToUpdate.getBirthDate();
+      LocalDate birthDate = userToUpdate.getBirthDate();
       if (birthDate != null) {
         user.setBirthDate(birthDate);
       }

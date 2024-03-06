@@ -1,11 +1,11 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class UserPutDTO {
     private Long id;
     private String username;
-    private Date birthDate;
+    private LocalDate birthDate;
 
     public String getUsername() {
         return username;
@@ -23,11 +23,11 @@ public class UserPutDTO {
         this.id = id;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 }
