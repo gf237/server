@@ -78,7 +78,7 @@ public class UserController {
   public void editProfile(@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
     User userInput = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
     User userToUpdate = userService.getUser(userId);
-    if (userToUpdate.getToken() == userInput.getToken()) {
+    if (userToUpdate.getToken().equals(userInput.getToken())) {
       userService.updateProfile(userToUpdate, userInput);
     }
   }
