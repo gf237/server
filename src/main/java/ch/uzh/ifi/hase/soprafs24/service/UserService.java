@@ -117,13 +117,11 @@ public class UserService {
 
   }
 
-  public User logoutUser(User user) {
-    Long id = user.getId();
-    User userToLogout = userRepository.findById(id).orElse(null);
-    userToLogout.setStatus(UserStatus.OFFLINE);
-    userRepository.save(userToLogout);
+  public void logoutUser(User user) {
+    User userToUpdate = userRepository.findById(user.getId()).orElse(null);
+    userToUpdate.setStatus(UserStatus.OFFLINE);
+    userRepository.save(userToUpdate);
     userRepository.flush();
-    return userToLogout;
   }
 
 }
