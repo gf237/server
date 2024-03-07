@@ -91,6 +91,9 @@ public class UserService {
       if (!userByUsername.getId().equals(userByName.getId())) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provided username and password do not match.");
       }
+      userByUsername.setStatus(UserStatus.ONLINE);
+      userRepository.save(userByUsername);
+      userRepository.flush();
       return userByUsername;
     }
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found or invalid credentials.");
@@ -98,11 +101,6 @@ public class UserService {
 
   public User getUser(Long userId) {
     return userRepository.findById(userId).orElse(null);
-  }
-
-  public void setStatus(User user) {
-    User userToUpdate = userRepository.findById(user.getId()).orElse(null);
-    userToUpdate.setStatus(UserStatus.OFFLINE);
   }
 
   public void updateProfile(User userToUpdate, User inputUser) {
@@ -115,6 +113,17 @@ public class UserService {
       userToUpdate.setBirthday(birthday);
     }
     userRepository.save(userToUpdate);
+    userRepository.flush();
 
   }
+
+  public User logoutUser(User user) {
+    Long id = user.getId();
+    User userToLogout = userRepository.findById(id).orElse(null);
+    userToLogout.setStatus(UserStatus.OFFLINE);
+    userRepository.save(userToLogout);
+    userRepository.flush();
+    return userToLogout;
+  }
+
 }

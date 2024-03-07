@@ -2,10 +2,13 @@ package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
 import java.time.LocalDate;
 
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+
 public class UserPutDTO {
     private Long id;
     private String username;
     private LocalDate birthday;
+    private UserStatus status;
 
     public String getUsername() {
         return username;
@@ -29,5 +32,13 @@ public class UserPutDTO {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 }
