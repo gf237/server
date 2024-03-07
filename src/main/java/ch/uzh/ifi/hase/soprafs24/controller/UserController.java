@@ -73,7 +73,7 @@ public class UserController {
   }
 
   @PutMapping("/users/{userId}")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
   public void editProfile(@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
     User userInput = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);

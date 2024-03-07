@@ -94,11 +94,15 @@ public class UserService {
       userRepository.flush();
       return userByUsername;
     }
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found or invalid credentials.");
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or invalid credentials.");
   }
 
   public User getUser(Long userId) {
-    return userRepository.findById(userId).orElse(null);
+    if (userId != null) {
+      return userRepository.findById(userId)
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId not found.");
   }
 
   public void updateProfile(User userToUpdate, User inputUser) {
@@ -110,13 +114,21 @@ public class UserService {
     if (birthday != null) {
       userToUpdate.setBirthday(birthday);
     }
+    if (userToUpdate == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId not found.");
+    }
     userRepository.save(userToUpdate);
     userRepository.flush();
 
   }
 
   public void logoutUser(User user) {
-    User userToUpdate = userRepository.findById(user.getId()).orElse(null);
+    Long userId = user.getId();
+    if (userId == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId not found.");
+    }
+    User userToUpdate = userRepository.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
     userToUpdate.setStatus(UserStatus.OFFLINE);
     userRepository.save(userToUpdate);
     userRepository.flush();
