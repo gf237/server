@@ -69,16 +69,11 @@ public class UserService {
    */
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-    User userByName = userRepository.findByName(userToBeCreated.getName());
 
     String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-    if (userByUsername != null && userByName != null) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT,
-          String.format(baseErrorMessage, "username and the name", "are"));
-    } else if (userByUsername != null) {
+    if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
-    } else if (userByName != null) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "name", "is"));
+
     }
   }
 
@@ -106,8 +101,13 @@ public class UserService {
   }
 
   public void updateProfile(User userToUpdate, User inputUser) {
+    User userByUsername = userRepository.findByUsername(inputUser.getUsername());
     String username = inputUser.getUsername();
     if (username != null) {
+      if (userByUsername != null) {
+        String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not updated!";
+        throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
+      }
       userToUpdate.setUsername(username);
     }
     LocalDate birthday = inputUser.getBirthday();

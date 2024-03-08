@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,9 @@ public class UserController {
     User userToUpdate = userService.getUser(userId);
     if (userToUpdate.getToken().equals(userInput.getToken())) {
       userService.updateProfile(userToUpdate, userInput);
+    } else {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          String.format("You are not authorized to make this change."));
     }
   }
 
