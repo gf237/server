@@ -186,6 +186,25 @@ public class UserControllerTest {
 
   }
 
+  @Test
+  public void editUser_invalidInput_user() throws Exception {
+    // given
+    UserPutDTO userPutDTO = new UserPutDTO();
+    userPutDTO.setUsername("testUsername");
+    userPutDTO.setId(1L);
+    userPutDTO.setToken("1");
+
+    given(userService.updateProfile(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+    // when/then -> do the request + validate the result
+    MockHttpServletRequestBuilder putRequest = put("/users/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(userPutDTO));
+
+    // then
+    mockMvc.perform(putRequest).andExpect(status().isNotFound());
+
+  }
+
   /**
    * Helper Method to convert userPostDTO into a JSON string such that the input
    * can be processed
