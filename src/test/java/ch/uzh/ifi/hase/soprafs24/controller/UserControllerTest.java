@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,9 +23,13 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,10 +74,10 @@ public class UserControllerTest {
   }
 
   @Test
-  public void givenUser_whenGetUser_thenReturnJsonArray() throws Exception {
+  public void validUser_whenGetUser_thenReturnJsonArray() throws Exception {
     // given
     User user = new User();
-    user.setName("Firstname Lastname");
+    user.setName("1234");
     user.setUsername("firstname@lastname");
     user.setStatus(UserStatus.OFFLINE);
     user.setId(1L);
@@ -90,11 +95,21 @@ public class UserControllerTest {
   }
 
   @Test
+  public void nonvalidUser_whenGetUser_thenReturnErr() throws Exception {
+    // when/then -> do the request + validate the result
+    MockHttpServletRequestBuilder getRequest = get("/users/1").contentType(MediaType.APPLICATION_JSON);
+
+    given(userService.getUser(1L)).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+    mockMvc.perform(getRequest).andExpect(status().isNotFound());
+  }
+
+  @Test
   public void createUser_validInput_userCreated() throws Exception {
     // given
     User user = new User();
     user.setId(1L);
-    user.setName("Test User");
+    user.setName("1234");
     user.setUsername("testUsername");
     user.setToken("1");
     user.setStatus(UserStatus.ONLINE);
@@ -117,6 +132,58 @@ public class UserControllerTest {
         .andExpect(jsonPath("$.name", is(user.getName())))
         .andExpect(jsonPath("$.username", is(user.getUsername())))
         .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+  }
+
+  @Test
+  public void createUser_invalidInput_userCreated() throws Exception {
+    // given
+    User user = new User();
+    user.setId(1L);
+    user.setName("1234");
+    user.setUsername("testUsername");
+    user.setToken("1");
+    user.setStatus(UserStatus.ONLINE);
+
+    UserPostDTO userPostDTO = new UserPostDTO();
+    userPostDTO.setName("Test User");
+    userPostDTO.setUsername("testUsername");
+
+    given(userService.createUser(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+
+    // when/then -> do the request + validate the result
+    MockHttpServletRequestBuilder postRequest = post("/users")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(userPostDTO));
+
+    // then
+    mockMvc.perform(postRequest)
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void editUser_validInput_user() throws Exception {
+    // given
+    User user = new User();
+    user.setId(1L);
+    user.setName("1234");
+    user.setUsername("testUsername");
+    user.setToken("1");
+    user.setStatus(UserStatus.ONLINE);
+
+    UserPutDTO userPutDTO = new UserPutDTO();
+    userPutDTO.setUsername("testUsername2");
+    userPutDTO.setId(1L);
+    userPutDTO.setToken("1");
+
+    given(userService.updateProfile(Mockito.any())).willReturn(user);
+    // when/then -> do the request + validate the result
+    MockHttpServletRequestBuilder putRequest = put("/users/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(userPutDTO));
+
+    // then
+    mockMvc.perform(putRequest).andExpect(status().isNoContent());
+
   }
 
   /**

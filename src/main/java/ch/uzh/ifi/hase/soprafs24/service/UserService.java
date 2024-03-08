@@ -93,30 +93,41 @@ public class UserService {
   }
 
   public User getUser(long userId) {
-    return userRepository.findById(userId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+    User userById = userRepository.findById(userId);
+    if (userById != null) {
+      return userById;
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or invalid credentials.");
   }
 
-  public void updateProfile(User userToUpdate, User inputUser) {
-    User userByUsername = userRepository.findByUsername(inputUser.getUsername());
-    String username = inputUser.getUsername();
-    if (username != null) {
-      if (userByUsername != null) {
-        String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not updated!";
-        throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
-      }
-      userToUpdate.setUsername(username);
-    }
-    LocalDate birthday = inputUser.getBirthday();
-    if (birthday != null) {
-      userToUpdate.setBirthday(birthday);
-    }
-    if (userToUpdate == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId not found.");
-    }
-    userRepository.save(userToUpdate);
-    userRepository.flush();
+  public User updateProfile(User inputUser) {
+    User userByToken = userRepository.findByToken(inputUser.getToken());
 
+    if (userByToken.getId().equals(inputUser.getId())) {
+
+      String username = inputUser.getUsername();
+      User userByUsername = userRepository.findByUsername(username);
+
+      if (username != null) {
+        if (userByUsername != null) {
+          String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not updated!";
+          throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
+        }
+        userByToken.setUsername(username);
+      }
+
+      LocalDate birthday = inputUser.getBirthday();
+      if (birthday != null) {
+        userByToken.setBirthday(birthday);
+      }
+
+      userRepository.save(userByToken);
+      userRepository.flush();
+
+    } else {
+      new ResponseStatusException(HttpStatus.CONFLICT, "Id is not matching!");
+    }
+    return userByToken;
   }
 
   public void logoutUser(User user) {

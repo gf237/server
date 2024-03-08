@@ -78,13 +78,16 @@ public class UserController {
   @ResponseBody
   public void editProfile(@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
     User userInput = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
-    User userToUpdate = userService.getUser(userId);
-    if (userToUpdate.getToken().equals(userInput.getToken())) {
-      userService.updateProfile(userToUpdate, userInput);
-    } else {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          String.format("You are not authorized to make this change."));
-    }
+    userInput.setId(userId);
+    userService.updateProfile(userInput);
+
+    // User userToUpdate = userService.getUser(userId);
+    // if (userToUpdate.getToken().equals(userInput.getToken())) {
+    // userService.updateProfile(userToUpdate, userInput);
+    // } else {
+    // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+    // String.format("You are not authorized to make this change."));
+    // }
   }
 
   @PutMapping("/logout")
