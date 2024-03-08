@@ -92,12 +92,9 @@ public class UserService {
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or invalid credentials.");
   }
 
-  public User getUser(Long userId) {
-    if (userId != null) {
-      return userRepository.findById(userId)
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
-    }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId not found.");
+  public User getUser(long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
   }
 
   public void updateProfile(User userToUpdate, User inputUser) {
@@ -133,5 +130,4 @@ public class UserService {
     userRepository.save(userToUpdate);
     userRepository.flush();
   }
-
 }

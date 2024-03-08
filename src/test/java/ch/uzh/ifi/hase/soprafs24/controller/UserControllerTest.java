@@ -69,6 +69,27 @@ public class UserControllerTest {
   }
 
   @Test
+  public void givenUser_whenGetUser_thenReturnJsonArray() throws Exception {
+    // given
+    User user = new User();
+    user.setName("Firstname Lastname");
+    user.setUsername("firstname@lastname");
+    user.setStatus(UserStatus.OFFLINE);
+    user.setId(1L);
+
+    given(userService.getUser(1L)).willReturn(user);
+
+    // when/then -> do the request + validate the result
+    MockHttpServletRequestBuilder getRequest = get("/users/1").contentType(MediaType.APPLICATION_JSON);
+
+    mockMvc.perform(getRequest).andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+        .andExpect(jsonPath("$.name", is(user.getName())))
+        .andExpect(jsonPath("$.username", is(user.getUsername())))
+        .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+  }
+
+  @Test
   public void createUser_validInput_userCreated() throws Exception {
     // given
     User user = new User();
